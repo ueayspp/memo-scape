@@ -1,5 +1,5 @@
 <template>
-  <div id="sidebar" class="flex flex-col justify-between w-96 h-screen bg-white">
+  <div id="sidebar" class="flex flex-col justify-between w-96 h-screen border-r bg-white">
     <div>
       <div class="inline-flex items-center justify-center w-20 h-20">
         <div class="block w-10 h-10 bg-gray-200 rounded-lg"></div>
@@ -9,8 +9,8 @@
         <nav class="flex flex-col p-2">
           <div class="py-auto mb-2">
             <router-link
-              to="/home"
-              class="flex justify-start px-8 py-1.5 t text-blue-700 rounded bg-green-50 group relative"
+              to="/"
+              class="flex justify-start px-8 py-1.5 t text-gray-500 group relative"
             >
               <HomeIcon class="h-5 w-5 text-gray-500" />
               <span class="text-sm font-semibold px-4">Home</span>
@@ -20,7 +20,7 @@
           <ul class="pt-4 space-y-2 border-t border-gray-100">
             <li>
               <router-link
-                to=""
+                to="/diary"
                 class="flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700 relative group"
               >
                 <BookOpenIcon class="h-5 w-5 text-gray-500" />
@@ -30,7 +30,7 @@
 
             <li>
               <router-link
-                to=""
+                to="/todolist"
                 class="flex relative group justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
                 <ClipboardListIcon class="h-5 w-5 text-gray-500" />
@@ -40,7 +40,7 @@
 
             <li>
               <router-link
-                to=""
+                to="/memo"
                 class="relative group flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
                 <DocumentTextIcon class="h-5 w-5 text-gray-500" />
@@ -50,7 +50,7 @@
 
             <li>
               <router-link
-                to=""
+                to="/planner"
                 class="flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700 relative group"
               >
                 <CalendarIcon class="h-5 w-5 text-gray-500" />
@@ -60,7 +60,7 @@
 
             <li>
               <router-link
-                to=""
+                to="/setting"
                 class="relative group flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
                 <CogIcon class="h-5 w-5 text-gray-500" />
