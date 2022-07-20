@@ -16,6 +16,31 @@ const routes: Array<RouteRecordRaw> = [
     name: 'login',
     component: () => import('@/components/Login.vue'),
   },
+  {
+    path: '/diary',
+    name: 'diary',
+    component: () => import('@/views/Diary.vue'),
+  },
+  {
+    path: '/todolist',
+    name: 'todolist',
+    component: () => import('@/views/TodoList.vue'),
+  },
+  {
+    path: '/planner',
+    name: 'planner',
+    component: () => import('@/views/Planner.vue'),
+  },
+  {
+    path: '/memo',
+    name: 'memo',
+    component: () => import('@/views/Memo.vue'),
+  },
+  {
+    path: '/setting',
+    name: 'setting',
+    component: () => import('@/views/Setting.vue'),
+  },
 ]
 
 const router = createRouter({
