@@ -21,9 +21,13 @@
           </label>
 
           <!-- if !currentlyEditing => display editBtn, delBtn -->
-          <div v-if="currentlyEditing !== todo.id">
-            <button class="todo-button" @click.prevent="editTodo(todo)">edit</button>
-            <button class="todo-button" @click.prevent="deleteTodo(todo.id)">del</button>
+          <div class="pr-4" v-if="currentlyEditing !== todo.id">
+            <button class="todo-button" @click.prevent="editTodo(todo)">
+              <PencilIcon class="h-5 w-5 text-emerald-400" />
+            </button>
+            <button class="todo-button" @click.prevent="deleteTodo(todo.id)">
+              <TrashIcon class="h-5 w-5 text-red-400" />
+            </button>
           </div>
 
           <!-- if currentlyEditing => display editForm, saveBtn -->
@@ -41,6 +45,7 @@
 </template>
 
 <script>
+import { PencilIcon, TrashIcon } from '@heroicons/vue/outline'
 import Sidebar from '@/components/Sidebar.vue'
 import { db } from '@/main'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
@@ -58,6 +63,8 @@ import {
 
 export default {
   components: {
+    PencilIcon,
+    TrashIcon,
     Sidebar,
   },
   name: 'todolist',
@@ -250,6 +257,7 @@ a {
   border-top: 1px solid lightgrey;
   border-left: 1px solid lightgrey;
   border-right: 1px solid lightgrey;
+  justify-content: space-between;
   &:first-of-type {
     border-radius: 3px 3px 0 0;
   }
