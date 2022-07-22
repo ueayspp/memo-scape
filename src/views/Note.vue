@@ -1,33 +1,33 @@
 <template>
   <Sidebar />
   <RouterView />
-  <div id="diary" class="w-screen bg-gray-100">
+  <div id="note" class="w-screen bg-gray-100">
     <header class="page-header"></header>
     <section class="wrapper">
       <form class="new-todo-form">
         <label class="new-todo-label">
           Title:
           <input v-model="newTitle" type="text" class="new-todo-input" />
-          Story:
-          <input v-model="newStory" type="text" class="new-todo-input" />
+          Content:
+          <input v-model="newContent" type="text" class="new-todo-input" />
         </label>
-        <button type="submit" class="new-todo-button" @click.prevent="addDiary">Add</button>
+        <button type="submit" class="new-todo-button" @click.prevent="addNote">Add</button>
       </form>
       <ul class="todo-list">
-        <li v-for="diary in diarys" :key="diary.id" class="todo-item">
+        <li v-for="note in notes" :key="note.id" class="todo-item">
           <!-- check if currentlyEditing or not -->
           <!-- if !currentlyEditing => display checkbox, todoContent -->
-          <label v-if="currentlyEditing !== diary.id" class="todo-item-label">
-            {{ diary.title }}
-            {{ diary.story }}
+          <label v-if="currentlyEditing !== note.id" class="todo-item-label">
+            {{ note.title }}
+            {{ note.content }}
           </label>
 
           <!-- if !currentlyEditing => display editBtn, delBtn -->
-          <div class="pr-4" v-if="currentlyEditing !== diary.id">
-            <button class="todo-button" @click.prevent="editDiary(diary)">
+          <div class="pr-4" v-if="currentlyEditing !== note.id">
+            <button class="todo-button" @click.prevent="editNote(note)">
               <PencilIcon class="h-5 w-5 text-emerald-500" />
             </button>
-            <button class="todo-button" @click.prevent="deleteDiary(diary.id)">
+            <button class="todo-button" @click.prevent="deleteNote(note.id)">
               <TrashIcon class="h-5 w-5 text-red-500" />
             </button>
           </div>
@@ -36,12 +36,10 @@
           <form v-else class="edit-todo-form">
             <label class="edit-todo-label">
               Edit:
-              <input v-model.trim="editDiaryTitle" type="text" class="edit-todo-input" />
-              <input v-model.trim="editDiaryStory" type="text" class="edit-todo-input" />
+              <input v-model.trim="editNoteTitle" type="text" class="edit-todo-input" />
+              <input v-model.trim="editNoteContent" type="text" class="edit-todo-input" />
             </label>
-            <button type="submit" class="edit-todo-button" @click.prevent="updateDiary">
-              Save
-            </button>
+            <button type="submit" class="edit-todo-button" @click.prevent="updateNote">Save</button>
           </form>
         </li>
       </ul>
@@ -76,11 +74,11 @@ export default {
   data() {
     return {
       newTitle: '',
-      newStory: '',
-      diarys: [],
+      newContent: '',
+      notes: [],
       currentlyEditing: null,
-      editDiaryTitle: '',
-      editDiaryStory: '',
+      editNoteTitle: '',
+      editNoteContent: '',
       uid: null,
     }
   },
@@ -95,20 +93,20 @@ export default {
     })
   },
   methods: {
-    async addDiary() {
-      const colRef = collection(db, 'diarys')
+    async addNote() {
+      const colRef = collection(db, 'notes')
       const dataObj = {
         title: this.newTitle,
-        story: this.newStory,
+        content: this.newContent,
         uid: this.uid,
       }
       const docRef = await addDoc(colRef, dataObj)
       console.log('Document written with ID: ', docRef.id)
-      this.newTitle = this.newStory = ''
+      this.newTitle = this.newContent = ''
     },
     async getNote() {
-      const colRef = collection(db, 'diarys')
-      const q = query(collection(db, 'diarys'), where('uid', '==', this.uid))
+      const colRef = collection(db, 'notes')
+      const q = query(collection(db, 'notes'), where('uid', '==', this.uid))
       // const unsubscribe = onSnapshot(q, (querySnapshot) => {
       //   querySnapshot.forEach((doc) => {
       //     const todoData = doc.data()
@@ -120,10 +118,10 @@ export default {
       // })
       await onSnapshot(colRef, (snap) => {
         snap.forEach((doc) => {
-          let diaryData = doc.data()
-          diaryData.id = doc.id
+          let noteData = doc.data()
+          noteData.id = doc.id
           console.log(doc.id, ' => ', doc.data())
-          this.diarys.push(diaryData)
+          this.notes.push(noteData)
         })
       })
       // console.log(this.todos)
@@ -134,24 +132,24 @@ export default {
       //   this.todos.push(doc.data())
       // })
     },
-    async editDiary(diary) {
-      this.currentlyEditing = diary.id
-      this.editDiaryTitle = diary.title
-      this.editDiaryStory = diary.story
+    async editNote(note) {
+      this.currentlyEditing = note.id
+      this.editNoteTitle = note.title
+      this.editNoteContent = note.content
       console.log('Current doc ID: ', this.currentlyEditing)
       return this.currentlyEditing
     },
-    async updateDiary() {
-      await updateDoc(doc(db, 'diarys', this.currentlyEditing), {
-        title: this.editDiaryTitle,
-        story: this.editDiaryStory,
+    async updateNote() {
+      await updateDoc(doc(db, 'notes', this.currentlyEditing), {
+        title: this.editNoteTitle,
+        content: this.editNoteContent,
       })
     },
-    async deleteDiary(diaryID) {
+    async deleteMemo(noteID) {
       // retrieve all the documents and delete them
-      const colRef = collection(db, 'diarys')
-      const diaryRef = doc(colRef, diaryID)
-      await deleteDoc(diaryRef)
+      const colRef = collection(db, 'notes')
+      const noteRef = doc(colRef, noteID)
+      await deleteDoc(noteRef)
     },
   },
 }
@@ -162,7 +160,7 @@ body {
   margin: 0;
   padding: 0;
 }
-#diary {
+#todolist {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

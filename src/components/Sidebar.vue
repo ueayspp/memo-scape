@@ -40,15 +40,15 @@
 
             <li>
               <router-link
-                to="/memo"
+                to="/note"
                 class="relative group flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
                 <DocumentTextIcon class="h-5 w-5 text-gray-500" />
-                <span class="text-sm px-4">Memo</span>
+                <span class="text-sm px-4">Note</span>
               </router-link>
             </li>
 
-            <li>
+            <!-- <li>
               <router-link
                 to="/planner"
                 class="flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700 relative group"
@@ -56,7 +56,7 @@
                 <CalendarIcon class="h-5 w-5 text-gray-500" />
                 <span class="text-sm px-4">Planner</span>
               </router-link>
-            </li>
+            </li> -->
 
             <li>
               <router-link
