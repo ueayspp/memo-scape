@@ -32,9 +32,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Planner.vue'),
   },
   {
-    path: '/memo',
-    name: 'memo',
-    component: () => import('@/views/Memo.vue'),
+    path: '/note',
+    name: 'note',
+    component: () => import('@/views/Note.vue'),
   },
   {
     path: '/setting',
