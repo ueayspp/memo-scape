@@ -84,8 +84,8 @@ export default {
       uid: null,
     }
   },
-  created() {
-    this.getNote()
+  async created() {
+    await this.subscribeDiarysCollection()
 
     const auth = getAuth()
     onAuthStateChanged(auth, (user) => {
@@ -133,6 +133,28 @@ export default {
       //   // add each doc to 'todos' array
       //   this.todos.push(doc.data())
       // })
+    },
+    async subscribeDiarysCollection() {
+      // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
+      const diarysCollection = collection(db, 'diarys')
+      await onSnapshot(diarysCollection, (snap) => {
+        const docChanges = snap.docChanges()
+        docChanges.forEach(docChange => {
+          const doc = docChange.doc
+          switch(docChange.type) { 
+             case 'added': { 
+                let diaryData = doc.data()
+                diaryData.id = doc.id
+                this.diarys.push(diaryData)
+                break
+             } 
+             case 'removed': { 
+                this.diarys = this.diarys.filter(it => it.id !== doc.id)
+                break
+             } 
+          } 
+        })
+      })
     },
     async editDiary(diary) {
       this.currentlyEditing = diary.id
