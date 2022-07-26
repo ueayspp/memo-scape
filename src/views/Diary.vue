@@ -85,14 +85,16 @@ export default {
     }
   },
   async created() {
-    await this.subscribeDiarysCollection()
-
     const auth = getAuth()
-    onAuthStateChanged(auth, (user) => {
-      const uid = user.uid
-      console.log('UID: ' + uid)
-      return (this.uid = user.uid)
-    })
+    const user = auth.currentUser
+
+    if (user) {
+      const uuid = user.uid
+      this.uid = uuid
+      console.log('get uid: ' + this.uid)
+    }
+
+    await this.subscribeDiarysCollection()
   },
   methods: {
     async addDiary() {
@@ -106,53 +108,25 @@ export default {
       console.log('Document written with ID: ', docRef.id)
       this.newTitle = this.newStory = ''
     },
-    async getNote() {
-      const colRef = collection(db, 'diarys')
-      const q = query(collection(db, 'diarys'), where('uid', '==', this.uid))
-      // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      //   querySnapshot.forEach((doc) => {
-      //     const todoData = doc.data()
-      //     todoData.id = doc.id
-      //     console.log(doc.id, ' => ', doc.data())
-      //     this.todos.push(todoData)
-      //   })
-      //   console.log('TodoList: ', this.todos)
-      // })
-      await onSnapshot(colRef, (snap) => {
-        snap.forEach((doc) => {
-          let diaryData = doc.data()
-          diaryData.id = doc.id
-          console.log(doc.id, ' => ', doc.data())
-          this.diarys.push(diaryData)
-        })
-      })
-      // console.log(this.todos)
-      // const querySnapshot = await getDocs(q)
-      // querySnapshot.forEach((doc) => {
-      //   console.log(doc.id, ' => ', doc.data())
-      //   // add each doc to 'todos' array
-      //   this.todos.push(doc.data())
-      // })
-    },
     async subscribeDiarysCollection() {
       // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
-      const diarysCollection = collection(db, 'diarys')
+      const diarysCollection = query(collection(db, 'diarys'), where('uid', '==', this.uid))
       await onSnapshot(diarysCollection, (snap) => {
         const docChanges = snap.docChanges()
-        docChanges.forEach(docChange => {
+        docChanges.forEach((docChange) => {
           const doc = docChange.doc
-          switch(docChange.type) { 
-             case 'added': { 
-                let diaryData = doc.data()
-                diaryData.id = doc.id
-                this.diarys.push(diaryData)
-                break
-             } 
-             case 'removed': { 
-                this.diarys = this.diarys.filter(it => it.id !== doc.id)
-                break
-             } 
-          } 
+          switch (docChange.type) {
+            case 'added': {
+              let diaryData = doc.data()
+              diaryData.id = doc.id
+              this.diarys.push(diaryData)
+              break
+            }
+            case 'removed': {
+              this.diarys = this.diarys.filter((it) => it.id !== doc.id)
+              break
+            }
+          }
         })
       })
     },

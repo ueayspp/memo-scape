@@ -82,15 +82,17 @@ export default {
       uid: null,
     }
   },
-  created() {
-    this.getNote()
-
+  async created() {
     const auth = getAuth()
-    onAuthStateChanged(auth, (user) => {
-      const uid = user.uid
-      console.log('UID: ' + uid)
-      return (this.uid = user.uid)
-    })
+    const user = auth.currentUser
+
+    if (user) {
+      const uuid = user.uid
+      this.uid = uuid
+      console.log('get uid: ' + this.uid)
+    }
+
+    await this.subscribeNotesCollection()
   },
   methods: {
     async addNote() {
@@ -104,33 +106,27 @@ export default {
       console.log('Document written with ID: ', docRef.id)
       this.newTitle = this.newContent = ''
     },
-    async getNote() {
-      const colRef = collection(db, 'notes')
-      const q = query(collection(db, 'notes'), where('uid', '==', this.uid))
-      // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      //   querySnapshot.forEach((doc) => {
-      //     const todoData = doc.data()
-      //     todoData.id = doc.id
-      //     console.log(doc.id, ' => ', doc.data())
-      //     this.todos.push(todoData)
-      //   })
-      //   console.log('TodoList: ', this.todos)
-      // })
-      await onSnapshot(colRef, (snap) => {
-        snap.forEach((doc) => {
-          let noteData = doc.data()
-          noteData.id = doc.id
-          console.log(doc.id, ' => ', doc.data())
-          this.notes.push(noteData)
+    async subscribeNotesCollection() {
+      // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
+      const notesCollection = query(collection(db, 'notes'), where('uid', '==', this.uid))
+      await onSnapshot(notesCollection, (snap) => {
+        const docChanges = snap.docChanges()
+        docChanges.forEach((docChange) => {
+          const doc = docChange.doc
+          switch (docChange.type) {
+            case 'added': {
+              let noteData = doc.data()
+              noteData.id = doc.id
+              this.notes.push(noteData)
+              break
+            }
+            case 'removed': {
+              this.notes = this.notes.filter((it) => it.id !== doc.id)
+              break
+            }
+          }
         })
       })
-      // console.log(this.todos)
-      // const querySnapshot = await getDocs(q)
-      // querySnapshot.forEach((doc) => {
-      //   console.log(doc.id, ' => ', doc.data())
-      //   // add each doc to 'todos' array
-      //   this.todos.push(doc.data())
-      // })
     },
     async editNote(note) {
       this.currentlyEditing = note.id
