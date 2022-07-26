@@ -9,6 +9,13 @@
           New Todo:
           <input v-model="newTodo" type="text" class="new-todo-input" />
         </label>
+        <div class="flex">
+          <litepie-datepicker
+            as-single
+            placeholder="due date"
+            v-model="dueDate"
+          ></litepie-datepicker>
+        </div>
         <button type="submit" class="new-todo-button" @click.prevent="addTodo">Add</button>
       </form>
       <ul class="todo-list">
@@ -18,15 +25,16 @@
           <label v-if="currentlyEditing !== todo.id" class="todo-item-label">
             <input v-model="todo.done" type="checkbox" class="todo-item__checkbox" />
             {{ todo.content }}
+            {{ todo.dueDate }}
           </label>
 
           <!-- if !currentlyEditing => display editBtn, delBtn -->
           <div class="pr-4" v-if="currentlyEditing !== todo.id">
             <button class="todo-button" @click.prevent="editTodo(todo)">
-              <PencilIcon class="h-5 w-5 text-emerald-400" />
+              <PencilIcon class="h-5 w-5 text-emerald-500" />
             </button>
             <button class="todo-button" @click.prevent="deleteTodo(todo.id)">
-              <TrashIcon class="h-5 w-5 text-red-400" />
+              <TrashIcon class="h-5 w-5 text-red-500" />
             </button>
           </div>
 
@@ -36,6 +44,13 @@
               Edit:
               <input v-model.trim="editTodoText" type="text" class="edit-todo-input" />
             </label>
+            <div class="flex">
+              <litepie-datepicker
+                as-single
+                placeholder="due date"
+                v-model="editDueDate"
+              ></litepie-datepicker>
+            </div>
             <button type="submit" class="edit-todo-button" @click.prevent="updateTodo">Save</button>
           </form>
         </li>
@@ -45,6 +60,8 @@
 </template>
 
 <script>
+import { ref } from 'vue'
+import LitepieDatepicker from 'litepie-datepicker'
 import { PencilIcon, TrashIcon } from '@heroicons/vue/outline'
 import Sidebar from '@/components/Sidebar.vue'
 import { db } from '@/main'
@@ -53,6 +70,7 @@ import {
   collection,
   addDoc,
   onSnapshot,
+  orderBy,
   doc,
   getDocs,
   deleteDoc,
@@ -63,6 +81,7 @@ import {
 
 export default {
   components: {
+    LitepieDatepicker,
     PencilIcon,
     TrashIcon,
     Sidebar,
@@ -75,6 +94,8 @@ export default {
       currentlyEditing: null,
       editTodoText: '',
       uid: null,
+      dueDate: '',
+      editDueDate: '',
     }
   },
   async created() {
@@ -94,12 +115,13 @@ export default {
       const colRef = collection(db, 'todos')
       const dataObj = {
         content: this.newTodo,
+        dueDate: this.dueDate,
         done: false,
         uid: this.uid,
       }
       const docRef = await addDoc(colRef, dataObj)
       console.log('Document written with ID: ', docRef.id)
-      this.newTodo = ''
+      this.newTodo = this.dueDate = ''
     },
     async subscribeTodosCollection() {
       // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
@@ -126,13 +148,16 @@ export default {
     async editTodo(todo) {
       this.currentlyEditing = todo.id
       this.editTodoText = todo.content
+      this.editDueDate = todo.dueDate
       console.log('Current doc ID: ', this.currentlyEditing)
       return this.currentlyEditing
     },
     async updateTodo() {
       await updateDoc(doc(db, 'todos', this.currentlyEditing), {
         content: this.editTodoText,
+        dueDate: this.editDueDate,
       })
+      this.currentlyEditing = null
     },
     async deleteTodo(todoID) {
       // retrieve all the documents and delete them
