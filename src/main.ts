@@ -2,6 +2,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import './scss/main.scss'
+import 'v-calendar/dist/style.css'
+import SetupCalendar from 'v-calendar'
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
@@ -23,4 +25,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 export const db = getFirestore(app)
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(SetupCalendar, {}).use(router).mount('#app')
