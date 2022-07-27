@@ -15,6 +15,7 @@
     "firebase": "^9.9.0",
     "js-cookie": "^3.0.1",
     "litepie-datepicker": "^1.0.14",
+    "v-calendar": "^3.0.0-alpha.8",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
   },
