@@ -153,7 +153,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 body {
   margin: 0;
   padding: 0;
