@@ -1,10 +1,10 @@
 <template>
   <header>
-    <div class="max-w-screen-xl px-16 py-16 mx-auto my-12 bg-white rounded-2xl shadow">
-      <div class="text-left">
-        <h1 class="text-3xl font-bold text-gray-900">Welcome Back, {{ getDisplayName() }}</h1>
+    <div class="w-screen mx-10 py-10 border-b border-gray-200">
+      <section class="w-1/2 text-start">
+        <h1 class="text-2xl font-bold text-gray-900">Welcome Back, {{ displayName }} !</h1>
         <p class="mt-1.5 text-medium text-gray-500">Let's share something 🎉</p>
-      </div>
+      </section>
     </div>
   </header>
 </template>
@@ -17,6 +17,9 @@ export default {
     return {
       displayName: '',
     }
+  },
+  created() {
+    this.getDisplayName()
   },
   methods: {
     getDisplayName() {

@@ -1,57 +1,59 @@
 <template>
-  <div id="sidebar" class="flex flex-col justify-between w-96 h-screen border-r bg-white">
-    <div>
+  <div id="sidebar" class="flex flex-col justify-between w-24 h-screen border-r bg-white">
+    <div class="pt-10">
+      <!-- logo -->
       <div class="inline-flex items-center justify-center w-20 h-20">
-        <div class="block w-10 h-10 bg-gray-200 rounded-lg"></div>
+        <div class="block w-10 h-10 text-white bg-emerald-500 rounded-lg"></div>
       </div>
 
-      <div class="border-t border-gray-100">
-        <nav class="flex flex-col p-2">
-          <div class="py-auto mb-2">
+      <!-- sidebar item -->
+      <div class="">
+        <nav class="flex flex-col p-1">
+          <div class="py-auto mt-12 mb-2">
             <router-link
               to="/"
-              class="flex justify-start px-8 py-1.5 t text-gray-500 group relative"
+              class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
             >
-              <HomeIcon class="h-5 w-5 text-gray-500" />
-              <span class="text-sm font-semibold px-4">Home</span>
+              <HomeIcon class="h-5 w-5 text-gray-400" />
+              <!-- <span class="text-sm font-semibold px-4">Home</span> -->
             </router-link>
           </div>
 
-          <ul class="pt-4 space-y-2 border-t border-gray-100">
+          <ul class="pt-4 space-y-6">
             <li>
               <router-link
                 to="/diary"
-                class="flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700 relative group"
+                class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
-                <BookOpenIcon class="h-5 w-5 text-gray-500" />
-                <span class="text-sm px-4">Diary</span>
+                <BookOpenIcon class="h-5 w-5 text-gray-400" />
+                <!-- <span class="text-sm px-4">Diary</span> -->
               </router-link>
             </li>
 
             <li>
               <router-link
                 to="/todolist"
-                class="flex relative group justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
+                class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
-                <ClipboardListIcon class="h-5 w-5 text-gray-500" />
-                <span class="text-sm px-4">To-do list</span>
+                <ClipboardListIcon class="h-5 w-5 text-gray-400" />
+                <!-- <span class="text-sm px-4">To-do list</span> -->
               </router-link>
             </li>
 
             <li>
               <router-link
                 to="/note"
-                class="relative group flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
+                class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
-                <DocumentTextIcon class="h-5 w-5 text-gray-500" />
-                <span class="text-sm px-4">Note</span>
+                <DocumentTextIcon class="h-5 w-5 text-gray-400" />
+                <!-- <span class="text-sm px-4">Note</span> -->
               </router-link>
             </li>
 
             <!-- <li>
               <router-link
                 to="/planner"
-                class="flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700 relative group"
+                class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700 relative group"
               >
                 <CalendarIcon class="h-5 w-5 text-gray-500" />
                 <span class="text-sm px-4">Planner</span>
@@ -61,10 +63,10 @@
             <li>
               <router-link
                 to="/setting"
-                class="relative group flex justify-start px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
+                class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
-                <CogIcon class="h-5 w-5 text-gray-500" />
-                <span class="text-sm px-4">Setting</span>
+                <CogIcon class="h-5 w-5 text-gray-400" />
+                <!-- <span class="text-sm px-4">Setting</span> -->
               </router-link>
             </li>
           </ul>
@@ -76,10 +78,10 @@
       <button
         type="submit"
         @click="logout"
-        class="flex justify-center w-full px-2 py-1.5 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700 group relative"
+        class="flex justify-center w-full px-2 py-1.5 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700"
       >
         <LogoutIcon class="h-5 w-5 text-gray-500" />
-        <span class="text-sm font-semibold px-4">Logout</span>
+        <!-- <span class="text-sm font-semibold px-4">Logout</span> -->
       </button>
     </div>
   </div>
