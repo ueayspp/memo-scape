@@ -14,7 +14,7 @@
               to="/"
               class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
             >
-              <HomeIcon class="h-5 w-5 text-gray-400" />
+              <HomeIcon class="h-5 w-5 text-gray-400 hover:text-emerald-500" />
               <!-- <span class="text-sm font-semibold px-4">Home</span> -->
             </router-link>
           </div>
@@ -25,7 +25,7 @@
                 to="/diary"
                 class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
-                <BookOpenIcon class="h-5 w-5 text-gray-400" />
+                <BookOpenIcon class="h-5 w-5 text-gray-400 hover:text-emerald-500" />
                 <!-- <span class="text-sm px-4">Diary</span> -->
               </router-link>
             </li>
@@ -35,7 +35,7 @@
                 to="/todolist"
                 class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
-                <ClipboardListIcon class="h-5 w-5 text-gray-400" />
+                <ClipboardListIcon class="h-5 w-5 text-gray-400 hover:text-emerald-500" />
                 <!-- <span class="text-sm px-4">To-do list</span> -->
               </router-link>
             </li>
@@ -45,7 +45,7 @@
                 to="/note"
                 class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
-                <DocumentTextIcon class="h-5 w-5 text-gray-400" />
+                <DocumentTextIcon class="h-5 w-5 text-gray-400 hover:text-emerald-500" />
                 <!-- <span class="text-sm px-4">Note</span> -->
               </router-link>
             </li>
@@ -65,7 +65,7 @@
                 to="/setting"
                 class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700"
               >
-                <CogIcon class="h-5 w-5 text-gray-400" />
+                <CogIcon class="h-5 w-5 text-gray-400 hover:text-emerald-500" />
                 <!-- <span class="text-sm px-4">Setting</span> -->
               </router-link>
             </li>
@@ -80,7 +80,7 @@
         @click="logout"
         class="flex justify-center w-full px-2 py-1.5 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700"
       >
-        <LogoutIcon class="h-5 w-5 text-gray-500" />
+        <LogoutIcon class="h-5 w-5 text-gray-500 hover:text-red-500" />
         <!-- <span class="text-sm font-semibold px-4">Logout</span> -->
       </button>
     </div>
