@@ -1,35 +1,56 @@
 <template>
   <Sidebar />
   <RouterView />
-  <div id="setting" class="w-screen bg-gray-100">
-    <header class="page-header"></header>
-    <section class="wrapper">
-      <div class="new-todo-form h-80">
-        <div
-          id="img"
-          @click.prevent="uploadImage()"
-          class="block w-40 h-40 bg-gray-200 rounded-full hover:bg-gray-300"
-        >
-          {{ photoURL }}
+  <div id="setting" class="w-screen flex flex-row bg-gray-50">
+    <section class="w-1/3">
+      <h1 class="text-start text-2xl font-bold mt-20 mb-4 ml-20">Account</h1>
+      <h2 class="text-start text-gray-500 text-lg font-semibold ml-20">Profile & Setting</h2>
+    </section>
+    <section class="w-2/3 text-start bg-white my-20 mr-20 shadow rounded-lg">
+      <div class="flex flex-col text-start content-center px-20 py-20">
+        <div class="flex justify-center">
+          <img
+            :src="photoURL"
+            alt="profile"
+            class="w-40 h-40 mb-8 rounded-full cursor-pointer"
+            @click.prevent="editImgURL()"
+          />
         </div>
-        <label class="new-todo-label">
-          {{ displayName }}
-          <button class="todo-button" @click.prevent="editDisplayName()">
-            <PencilIcon class="h-3 w-3 text-gray-500" /></button
-        ></label>
-        <label class="new-todo-label">Email: {{ email }}</label>
-        <button
-          @click="changePassword()"
-          class="w-96 mt-10 px-auto py-3 text-sm font-semibold text-white bg-blue-500 rounded-lg"
-        >
-          Change Password
-        </button>
-        <button
-          @click="deleteAccount()"
-          class="w-96 mt-2 mb-2 px-auto py-3 text-sm font-semibold text-white bg-red-500 rounded-lg"
-        >
-          Delete Account
-        </button>
+
+        <div class="flex justify-center">
+          <label class="font-semibold">
+            {{ displayName }}
+            <button class="" @click.prevent="editDisplayName()">
+              <PencilIcon class="h-3 w-3 text-gray-500" /></button
+          ></label>
+        </div>
+
+        <div class="flex justify-center">
+          <label class="font-medium">{{ email }}</label>
+        </div>
+
+        <div class="grid justify-center">
+          <button
+            @click="updateEmail()"
+            class="w-96 mt-10 px-auto py-3 text-sm font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border rounded-lg"
+          >
+            Update Email
+          </button>
+
+          <button
+            @click="resetPassword()"
+            class="w-96 mt-2 px-auto py-3 text-sm font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border rounded-lg"
+          >
+            Reset Password
+          </button>
+
+          <button
+            @click="deleteAccount()"
+            class="w-96 mt-2 mb-2 px-auto py-3 text-sm font-semibold text-red-500 bg-gray-50 hover:text-white hover:bg-red-700 border rounded-lg"
+          >
+            Delete Account
+          </button>
+        </div>
       </div>
     </section>
   </div>
@@ -42,8 +63,9 @@ import { db } from '@/main'
 import {
   getAuth,
   onAuthStateChanged,
-  updateProfile,
+  updateEmail,
   updatePassword,
+  updateProfile,
   deleteUser,
 } from 'firebase/auth'
 import {
@@ -69,7 +91,7 @@ export default {
       uid: null,
       displayName: '',
       email: '',
-      photoURL: null,
+      photoURL: '',
     }
   },
   created() {
@@ -85,18 +107,20 @@ export default {
     }
   },
   methods: {
-    uploadImage() {
+    editImgURL() {
       const auth = getAuth()
       updateProfile(auth.currentUser, {
-        photoURL: '',
+        photoURL: prompt('Enter your imgURL:'),
       })
         .then(() => {
           // Profile updated!
-          // ...
+          alert('Update Image!')
         })
         .catch((error) => {
           // An error occurred
-          // ...
+          const errorCode = error.code
+          const errorMessage = error.message
+          alert(errorMessage)
         })
     },
     editDisplayName() {
@@ -106,7 +130,7 @@ export default {
       })
         .then(() => {
           // Profile updated!
-          // ...
+          alert('Update Display Name!')
         })
         .catch((error) => {
           // An error occurred
@@ -115,7 +139,23 @@ export default {
           alert(errorMessage)
         })
     },
-    changePassword() {
+    updateEmail() {
+      const auth = getAuth()
+      const newEmail = prompt('Enter your new email:')
+
+      updateEmail(auth.currentUser, newEmail)
+        .then(() => {
+          // Email updated!
+          alert('Update Email!')
+        })
+        .catch((error) => {
+          // An error occurred
+          const errorCode = error.code
+          const errorMessage = error.message
+          alert(errorMessage)
+        })
+    },
+    resetPassword() {
       const auth = getAuth()
 
       const user = auth.currentUser
@@ -167,68 +207,5 @@ body {
   color: #2c3e50;
   margin: 0;
   padding: 0;
-}
-h1,
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-a {
-  color: #42b983;
-}
-.page-header {
-  padding: 5rem 0;
-  width: 100%;
-  background: #42b983;
-}
-.wrapper {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-.new-todo-form {
-  display: flex;
-  justify-content: flex-start;
-  padding: 1rem;
-  border-radius: 3px;
-  border: 1px solid #fafafa;
-  box-shadow: 5px 5px 15px rgb(0 0 0 / 15%);
-  margin-top: -3rem;
-  background: white;
-  flex-direction: column;
-  align-items: center;
-}
-.new-todo-label {
-  display: flex;
-  flex-direction: row;
-  width: 80%;
-  justify-content: flex-start;
-  text-align: left;
-  font-weight: bold;
-}
-.new-todo-input {
-  padding: 0.5rem;
-  border-radius: 3px;
-  border: 1px solid lightgrey;
-  font-size: 1rem;
-  margin-top: 0.5rem;
-  font-weight: normal;
-}
-.new-todo-button {
-  font-size: 1rem;
-  padding: 0.5rem 0.7rem;
-  border-radius: 3px;
-  color: white;
-  font-weight: bold;
-  background: #42b983;
-  flex: 1;
-  margin-left: 1rem;
-  border: 1px solid #42b983;
-}
-#img {
-  margin-top: -5rem;
 }
 </style>
