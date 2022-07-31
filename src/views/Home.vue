@@ -1,51 +1,49 @@
 <template>
   <Sidebar />
   <RouterView />
-  <div class="w-screen bg-gray-50">
-    <div class="px-12 py-12">
-      <div class="w-full">
-        <h1 class="text-3xl text-start font-bold">Welcome Back, {{ displayName }} !</h1>
-        <p class="text-lg text-gray-500 text-start font-semibold mt-2">Let's share something</p>
-        <hr class="mt-8" />
-      </div>
+  <div class="w-screen h-screen px-16 py-16 bg-gray-50">
+    <div class="w-full">
+      <h1 class="text-3xl text-start font-bold">Welcome Back, {{ displayName }} !</h1>
+      <p class="text-lg text-gray-500 text-start font-semibold mt-2">Let's share something</p>
+      <hr class="mt-8" />
+    </div>
 
-      <div class="flex flex-col">
-        <!--  -->
-        <section class="">
-          <h1 class="text-xl text-start font-bold my-2">Summary</h1>
-          <div class="flex flex-row gap-4">
-            <div class="w-60 h-72 bg-emerald-400 shadow rounded-lg">
-              <h1>Create Diary</h1>
-            </div>
-            <div class="w-60 h-72 bg-emerald-300 shadow rounded-lg">
-              <h1>Create Note</h1>
-            </div>
-            <div class="w-60 h-72 bg-white shadow rounded-lg">
-              <h1>...</h1>
-            </div>
+    <div class="flex flex-col">
+      <!--  -->
+      <section class="">
+        <h1 class="text-xl text-start font-bold pt-8 pb-4">Summary</h1>
+        <div class="flex flex-row gap-4">
+          <div class="w-60 h-64 bg-emerald-400 shadow rounded-lg">
+            <h1>Create Diary</h1>
           </div>
-        </section>
+          <div class="w-60 h-64 bg-emerald-300 shadow rounded-lg">
+            <h1>Create Note</h1>
+          </div>
+          <div class="w-60 h-64 bg-white shadow rounded-lg">
+            <h1>...</h1>
+          </div>
+        </div>
+      </section>
 
-        <!-- Query Today's Duedate -->
-        <section class="">
-          <h1 class="text-xl text-start font-bold mt-4 mb-2">Today's Task</h1>
-          <div class="w-full h-56 space-y-8">
-            <ul class="grid gap-2 w-full text-start">
-              <li
-                v-for="todo in todos"
-                :key="todo.id"
-                class="flex justify-between px-8 py-4 rounded-md bg-white shadow-lg"
-              >
-                <label v-if="currentlyEditing !== todo.id">
-                  <input @click="checkTodo(todo)" type="checkbox" class="mr-4" />
-                  {{ todo.content }}
-                </label>
-                <label>priority</label>
-              </li>
-            </ul>
-          </div>
-        </section>
-      </div>
+      <!-- Query Today's Duedate -->
+      <section class="">
+        <h1 class="text-xl text-start font-bold pt-8 pb-4">Today's Task</h1>
+        <div class="w-full h-56 space-y-8">
+          <ul class="grid gap-2 w-full text-start">
+            <li
+              v-for="todo in todos"
+              :key="todo.id"
+              class="flex justify-between px-8 py-4 rounded-md bg-white shadow-lg"
+            >
+              <label v-if="currentlyEditing !== todo.id">
+                <input @click="checkTodo(todo)" type="checkbox" class="mr-4" />
+                {{ todo.content }}
+              </label>
+              <label>priority</label>
+            </li>
+          </ul>
+        </div>
+      </section>
     </div>
   </div>
   <Sidebar2 />
