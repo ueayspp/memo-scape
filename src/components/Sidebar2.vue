@@ -2,10 +2,17 @@
   <div id="sidebar" class="flex flex-col justify-between w-144 h-screen border-l bg-white">
     <div class="pt-10 mx-auto">
       <div class="flex">
-        <div class="block w-16 h-16 bg-gray-300 rounded-full"></div>
+        <div class="block w-16 h-16">
+          <img
+            :src="photoURL"
+            alt="profile"
+            class="w-16 h-16 mb-8 rounded-full"
+            @click.prevent="editImgURL()"
+          />
+        </div>
         <div class="flex flex-col ml-4">
-          <h1 class="text-lg text-start font-bold">username</h1>
-          <h2 class="text-sm text-start text-gray-500 font-semibold">email</h2>
+          <h1 class="text-lg text-start font-bold">{{ displayName }}</h1>
+          <h2 class="text-sm text-start text-gray-500 font-semibold">{{ email }}</h2>
         </div>
       </div>
 
@@ -24,9 +31,15 @@
 </template>
 
 <script>
+import { getAuth } from 'firebase/auth'
+
 export default {
   data() {
     return {
+      uid: null,
+      displayName: '',
+      email: '',
+      photoURL: '',
       attrs: [
         {
           key: 'today',
@@ -50,6 +63,18 @@ export default {
           ],
         },
       ],
+    }
+  },
+  async created() {
+    const auth = getAuth()
+    const user = auth.currentUser
+    if (user !== null) {
+      this.displayName = user.displayName
+      this.email = user.email
+      this.photoURL = user.photoURL
+      console.log('DisplayName: ' + this.displayName)
+      console.log('Email: ' + this.email)
+      console.log('Photo: ' + this.photoURL)
     }
   },
 }
