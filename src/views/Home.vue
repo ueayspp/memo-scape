@@ -13,13 +13,13 @@
       <section class="">
         <h1 class="text-xl text-start font-bold pt-8 pb-4">Summary</h1>
         <div class="flex flex-row gap-4">
-          <div class="w-60 h-64 bg-emerald-400 shadow rounded-lg">
+          <div class="w-56 h-60 bg-emerald-400 shadow rounded-lg">
             <h1>Create Diary</h1>
           </div>
-          <div class="w-60 h-64 bg-emerald-300 shadow rounded-lg">
+          <div class="w-56 h-60 bg-emerald-300 shadow rounded-lg">
             <h1>Create Note</h1>
           </div>
-          <div class="w-60 h-64 bg-white shadow rounded-lg">
+          <div class="w-56 h-60 bg-white shadow rounded-lg">
             <h1>...</h1>
           </div>
         </div>
@@ -27,19 +27,18 @@
 
       <!-- Query Today's Duedate -->
       <section class="">
-        <h1 class="text-xl text-start font-bold pt-8 pb-4">Today's Task</h1>
-        <div class="w-full h-56 space-y-8">
-          <ul class="grid gap-2 w-full text-start">
+        <h1 class="text-xl text-start font-bold pt-8 pb-4">Todo</h1>
+        <div class="w-full h-56 space-y-8 overflow-auto">
+          <ul class="grid grid-cols-2 gap-2 w-full text-start">
             <li
               v-for="todo in todos"
               :key="todo.id"
               class="flex justify-between px-8 py-4 rounded-md bg-white shadow-lg"
             >
               <label v-if="currentlyEditing !== todo.id">
-                <input @click="checkTodo(todo)" type="checkbox" class="mr-4" />
+                <input v-model="todo.done" @click="checkTodo(todo)" type="checkbox" class="mr-4" />
                 {{ todo.content }}
               </label>
-              <label>priority</label>
             </li>
           </ul>
         </div>
@@ -111,7 +110,11 @@ export default {
     },
     async subscribeTodosCollection() {
       // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
-      const todosCollection = query(collection(db, 'todos'), where('uid', '==', this.uid))
+      const todosCollection = query(
+        collection(db, 'todos'),
+        where('uid', '==', this.uid),
+        where('done', '==', false),
+      )
       await onSnapshot(todosCollection, (snap) => {
         const docChanges = snap.docChanges()
         docChanges.forEach((docChange) => {
@@ -132,10 +135,11 @@ export default {
       })
     },
     async checkTodo(todo) {
-      await updateDoc(doc(db, 'todos', this.currentlyEditing), {
+      console.log('done: ', todo.id)
+
+      await updateDoc(doc(db, 'todos', todo.id), {
         done: true,
       })
-      this.currentlyEditing = null
     },
   },
 }
