@@ -9,13 +9,13 @@
           New Todo:
           <input v-model="newTodo" type="text" class="new-todo-input" />
         </label>
-        <div class="flex">
+        <!-- <div class="flex">
           <litepie-datepicker
             as-single
             placeholder="due date"
             v-model="dueDate"
           ></litepie-datepicker>
-        </div>
+        </div> -->
         <button type="submit" class="new-todo-button" @click.prevent="addTodo">Add</button>
       </form>
       <ul class="todo-list">
@@ -23,7 +23,12 @@
           <!-- check if currentlyEditing or not -->
           <!-- if !currentlyEditing => display checkbox, todoContent -->
           <label v-if="currentlyEditing !== todo.id" class="todo-item-label">
-            <input v-model="todo.done" type="checkbox" class="todo-item__checkbox" />
+            <input
+              v-model="todo.done"
+              @click="checkTodo(todo)"
+              type="checkbox"
+              class="todo-item__checkbox"
+            />
             {{ todo.content }}
             {{ todo.dueDate }}
           </label>
@@ -44,13 +49,13 @@
               Edit:
               <input v-model.trim="editTodoText" type="text" class="edit-todo-input" />
             </label>
-            <div class="flex">
+            <!-- <div class="flex">
               <litepie-datepicker
                 as-single
                 placeholder="due date"
                 v-model="editDueDate"
               ></litepie-datepicker>
-            </div>
+            </div> -->
             <button type="submit" class="edit-todo-button" @click.prevent="updateTodo">Save</button>
           </form>
         </li>
@@ -115,7 +120,7 @@ export default {
       const colRef = collection(db, 'todos')
       const dataObj = {
         content: this.newTodo,
-        dueDate: this.dueDate,
+        // dueDate: this.dueDate,
         done: false,
         uid: this.uid,
       }
@@ -148,16 +153,23 @@ export default {
     async editTodo(todo) {
       this.currentlyEditing = todo.id
       this.editTodoText = todo.content
-      this.editDueDate = todo.dueDate
+      // this.editDueDate = todo.dueDate
       console.log('Current doc ID: ', this.currentlyEditing)
       return this.currentlyEditing
     },
     async updateTodo() {
       await updateDoc(doc(db, 'todos', this.currentlyEditing), {
         content: this.editTodoText,
-        dueDate: this.editDueDate,
+        // dueDate: this.editDueDate,
       })
       this.currentlyEditing = null
+    },
+    async checkTodo(todo) {
+      console.log('done: ', todo.id)
+
+      await updateDoc(doc(db, 'todos', todo.id), {
+        done: true,
+      })
     },
     async deleteTodo(todoID) {
       // retrieve all the documents and delete them
