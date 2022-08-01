@@ -1,85 +1,53 @@
 <template>
-  <Sidebar />
-  <RouterView />
-  <div class="w-screen h-screen p-20 bg-gray-100">
-    <h1 class="text-5xl text-center font-bold">Take a Note</h1>
+  <Transition name="EditNoteModal">
+    <div v-if="show" class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <button class="modal-default-button" @click="$emit('close')">
+            <XIcon class="w-5 h-5" />
+          </button>
 
-    <div class="flex justify-center">
-      <button
-        id="show-modal"
-        @click="showModal = true"
-        class="flex px-4 py-2 my-8 text-white font-bold bg-emerald-500 hover:bg-emerald-700 rounded-full"
-      >
-        <PlusSmIcon class="w-5 h-5" />
-        Create
-      </button>
-
-      <Teleport to="body">
-        <!-- use the modal component, pass in the prop -->
-        <CreateNoteModal :show="showModal" @close="showModal = false"> </CreateNoteModal>
-      </Teleport>
-    </div>
-
-    <div class="h-128 overflow-auto">
-      <ul class="grid grid-cols-4 gap-4">
-        <li
-          v-for="note in notes"
-          :key="note.id"
-          class="w-56 h-fit relative bg-white rounded-lg drop-shadow-xl"
-        >
-          <!-- check if currentlyEditing or not -->
-          <!-- DISPLAY FORM -->
-          <label v-if="currentlyEditing !== note.id" class="">
-            <h1 class="text-xl text-start font-bold p-6">{{ note.title }}</h1>
-            <p class="text-sm text-start font-bold px-6 pb-6">{{ note.content }}</p>
-          </label>
-          <div class="absolute bottom-4 right-4" v-if="currentlyEditing !== note.id">
-            <button class="" id="show-modal" @click.prevent="editNote(note)">
-              <PencilIcon class="h-5 w-5 text-emerald-500" />
-            </button>
-            <button class="" @click.prevent="deleteNote(note.id)">
-              <TrashIcon class="h-5 w-5 text-red-500" />
-            </button>
-          </div>
-
-          <!-- EDIT FORM -->
-          <form v-else class="w-56 h-fit flex flex-col">
-            <label class="flex flex-col">
+          <form class="flex flex-col">
+            <label class="flex flex-col p-10">
+              <h1 class="mb-6 text-xl text-emerald-500 text-start font-semibold">Edit</h1>
               <input
                 v-model.trim="editNoteTitle"
                 type="text"
-                class="text-xl text-start font-bold m-2 border-none focus:outline-none"
+                class="border-none focus:outline-none"
               />
               <textarea
                 v-model.trim="editNoteContent"
                 type="text"
-                class="text-sm text-start font-bold mx-2 border-none focus:outline-none"
+                class="h-56 bg-slate-200 border-none focus:outline-none"
               ></textarea>
             </label>
-
-            <button
-              type="submit"
-              class="w-12 px-auto py-1 text-sm text-white font-semibold bg-emerald-500 hover:bg-emerald-700 rounded-full"
-              @click.prevent="updateNote"
-            >
-              Save
-            </button>
+            <div class="flex justify-center">
+              <button
+                type="submit"
+                class="w-20 px-4 py-2 text-white font-semibold bg-emerald-500 hover:bg-emerald-700 rounded-full"
+                @click.prevent="updateNote"
+              >
+                Save
+              </button>
+            </div>
           </form>
-        </li>
-      </ul>
+          <!-- <form class="flex flex-col">
+            <label class="">
+              Edit:
+              <input v-model.trim="editNoteTitle" type="text" class="" />
+              <input v-model.trim="editNoteContent" type="text" class="" />
+            </label>
+            <button type="submit" class="" @click.prevent="updateNote">Save</button>
+          </form> -->
+        </div>
+      </div>
     </div>
-
-    <Teleport to="body">
-      <!-- use the modal component, pass in the prop -->
-      <EditNoteModal :show="showModal" @close="showModal = false"> </EditNoteModal>
-    </Teleport>
-  </div>
+  </Transition>
 </template>
 
 <script>
-import { PencilIcon, TrashIcon, PlusSmIcon } from '@heroicons/vue/outline'
+import { XIcon } from '@heroicons/vue/outline'
 import Sidebar from '@/components/Sidebar.vue'
-import CreateNoteModal from '@/components/CreateNoteModal.vue'
 import { db } from '@/main'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import {
@@ -96,14 +64,11 @@ import {
 
 export default {
   props: {
-    show: false,
+    show: Boolean,
   },
   components: {
-    PencilIcon,
-    TrashIcon,
-    PlusSmIcon,
+    XIcon,
     Sidebar,
-    CreateNoteModal,
   },
   name: 'note',
   data() {
@@ -115,7 +80,6 @@ export default {
       editNoteTitle: '',
       editNoteContent: '',
       uid: null,
-      showModal: false,
     }
   },
   async created() {
@@ -141,6 +105,7 @@ export default {
       const docRef = await addDoc(colRef, dataObj)
       console.log('Document written with ID: ', docRef.id)
       this.newTitle = this.newContent = ''
+      this.$emit('close')
     },
     async subscribeNotesCollection() {
       // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
@@ -176,7 +141,6 @@ export default {
         title: this.editNoteTitle,
         content: this.editNoteContent,
       })
-      this.currentlyEditing = null
     },
     async deleteNote(noteID) {
       // retrieve all the documents and delete them
@@ -201,5 +165,58 @@ body {
   color: #2c3e50;
   margin: 0;
   padding: 0;
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 700px;
+  height: 500px;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+}
+
+.modal-default-button {
+  float: right;
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ */
+
+.modal-enter-from {
+  opacity: 0;
+}
+
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .modal-container,
+.modal-leave-to .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }
 </style>
