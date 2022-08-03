@@ -94,54 +94,13 @@ export default {
       const dataObj = {
         title: this.newTitle,
         story: this.newStory,
-        createdAt: new Date(),
+        createdAt: new Date().toLocaleDateString('en-ZA'),
         uid: this.uid,
       }
       const docRef = await addDoc(colRef, dataObj)
       console.log('Document written with ID: ', docRef.id)
       this.newTitle = this.newStory = ''
       this.$emit('close')
-    },
-    async subscribeDiarysCollection() {
-      // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
-      const diarysCollection = query(collection(db, 'diarys'), where('uid', '==', this.uid))
-      await onSnapshot(diarysCollection, (snap) => {
-        const docChanges = snap.docChanges()
-        docChanges.forEach((docChange) => {
-          const doc = docChange.doc
-          switch (docChange.type) {
-            case 'added': {
-              let diaryData = doc.data()
-              diaryData.id = doc.id
-              this.diarys.push(diaryData)
-              break
-            }
-            case 'removed': {
-              this.diarys = this.diarys.filter((it) => it.id !== doc.id)
-              break
-            }
-          }
-        })
-      })
-    },
-    async editDiary(diary) {
-      this.currentlyEditing = diary.id
-      this.editDiaryTitle = diary.title
-      this.editDiaryStory = diary.story
-      console.log('Current doc ID: ', this.currentlyEditing)
-      return this.currentlyEditing
-    },
-    async updateDiary() {
-      await updateDoc(doc(db, 'diarys', this.currentlyEditing), {
-        title: this.editDiaryTitle,
-        story: this.editDiaryStory,
-      })
-    },
-    async deleteDiary(diaryID) {
-      // retrieve all the documents and delete them
-      const colRef = collection(db, 'diarys')
-      const diaryRef = doc(colRef, diaryID)
-      await deleteDoc(diaryRef)
     },
   },
 }
