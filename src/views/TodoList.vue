@@ -142,6 +142,21 @@ export default {
               this.todos.push(todoData)
               break
             }
+            case 'modified': {
+              let todoData = doc.data()
+              todoData.id = doc.id
+              console.log(todoData)
+              console.log(this.todos)
+
+              // search index
+              var index = this.todos
+                .map(function (e) {
+                  return e.id
+                })
+                .indexOf(todoData.id)
+              this.todos[index] = todoData
+              break
+            }
             case 'removed': {
               this.todos = this.todos.filter((it) => it.id !== doc.id)
               break

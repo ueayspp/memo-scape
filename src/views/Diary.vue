@@ -1,57 +1,89 @@
 <template>
   <Sidebar />
   <RouterView />
-  <div id="diary" class="w-screen bg-gray-100">
-    <header class="page-header"></header>
-    <section class="wrapper">
-      <form class="new-todo-form">
-        <label class="new-todo-label">
-          Title:
-          <input v-model="newTitle" type="text" class="new-todo-input" />
-          Story:
-          <input v-model="newStory" type="text" class="new-todo-input" />
-        </label>
-        <button type="submit" class="new-todo-button" @click.prevent="addDiary">Add</button>
-      </form>
-      <ul class="todo-list">
-        <li v-for="diary in diarys" :key="diary.id" class="todo-item">
-          <!-- check if currentlyEditing or not -->
-          <!-- if !currentlyEditing => display checkbox, todoContent -->
-          <label v-if="currentlyEditing !== diary.id" class="todo-item-label">
-            {{ diary.title }}
-            {{ diary.story }}
-          </label>
+  <div class="w-screen h-screen p-20 bg-gray-100">
+    <h1 class="text-4xl text-center font-bold">Diary</h1>
 
-          <!-- if !currentlyEditing => display editBtn, delBtn -->
-          <div class="pr-4" v-if="currentlyEditing !== diary.id">
-            <button class="todo-button" @click.prevent="editDiary(diary)">
-              <PencilIcon class="h-5 w-5 text-emerald-500" />
-            </button>
-            <button class="todo-button" @click.prevent="deleteDiary(diary.id)">
-              <TrashIcon class="h-5 w-5 text-red-500" />
-            </button>
-          </div>
+    <!-- NEW DIARY MODAL -->
+    <div class="flex justify-start">
+      <button
+        id="show-modal"
+        @click="showModal = true"
+        class="flex px-4 py-2 my-8 text-white font-bold bg-emerald-500 hover:bg-emerald-700 rounded-full"
+      >
+        <PlusSmIcon class="w-5 h-5" />
+        New Diary
+      </button>
 
-          <!-- if currentlyEditing => display editForm, saveBtn -->
-          <form v-else class="edit-todo-form">
-            <label class="edit-todo-label">
-              Edit:
-              <input v-model.trim="editDiaryTitle" type="text" class="edit-todo-input" />
-              <input v-model.trim="editDiaryStory" type="text" class="edit-todo-input" />
+      <Teleport to="body">
+        <!-- use the modal component, pass in the prop -->
+        <CreateDiaryModal :show="showModal" @close="showModal = false"> </CreateDiaryModal>
+      </Teleport>
+    </div>
+
+    <div class="flex">
+      <!-- DISPLAY -->
+      <div class="w-1/3 h-128 overflow-auto">
+        <ul class="flex-col w-96">
+          <li
+            v-for="diary in diarys"
+            :key="diary.id"
+            class="border-b-2 bg-white hover:bg-emerald-50"
+          >
+            <label @click.prevent="editDiary(diary)" class="relative hover:cursor-pointer">
+              <h1 class="text-xl text-start font-bold p-6">{{ diary.title }}</h1>
+              <p class="text-sm text-start truncate font-bold px-6 pb-6">{{ diary.story }}</p>
+              <div class="absolute top-4 right-4">
+                <button @click.prevent="deleteDiary(diary.id)" class="bg-red-500 h-8 w-8 px-1">
+                  <TrashIcon class="h-5 w-5 text-white" />
+                </button>
+              </div>
             </label>
-            <button type="submit" class="edit-todo-button" @click.prevent="updateDiary">
+
+            <!-- <div class="absolute bottom-4 right-4" v-if="currentlyEditing !== diary.id">
+              <button @click.prevent="editDiary(diary)">
+                <PencilIcon class="h-5 w-5 text-emerald-500" />
+              </button>
+              <button @click.prevent="deleteDiary(diary.id)">
+                <TrashIcon class="h-5 w-5 text-red-500" />
+              </button>
+            </div> -->
+          </li>
+        </ul>
+      </div>
+
+      <!-- FORM -->
+      <div class="w-2/3 bg-green-50">
+        <form class="w-full h-full p-20 text-start bg-white rounded-lg">
+          <label class="flex flex-col">
+            <input
+              v-model.trim="editDiaryTitle"
+              type="text"
+              class="text-xl text-start font-bold m-2 border-none focus:outline-none"
+            />
+            <textarea
+              v-model.trim="editDiaryStory"
+              type="text"
+              class="h-48 resize-none text-sm text-start font-bold mx-2 border-none focus:outline-none"
+            ></textarea>
+            <button
+              type="submit"
+              class="w-12 px-auto text-sm text-white font-semibold bg-emerald-500 hover:bg-emerald-700 rounded-full"
+              @click.prevent="updateDiary"
+            >
               Save
             </button>
-          </form>
-        </li>
-      </ul>
-    </section>
+          </label>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { PencilIcon, TrashIcon } from '@heroicons/vue/outline'
+import { PencilIcon, TrashIcon, PlusSmIcon } from '@heroicons/vue/outline'
 import Sidebar from '@/components/Sidebar.vue'
+import CreateDiaryModal from '@/components/CreateDiaryModal.vue'
 import { db } from '@/main'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import {
@@ -67,10 +99,15 @@ import {
 } from 'firebase/firestore'
 
 export default {
+  props: {
+    show: false,
+  },
   components: {
     PencilIcon,
     TrashIcon,
+    PlusSmIcon,
     Sidebar,
+    CreateDiaryModal,
   },
   name: 'note',
   data() {
@@ -82,6 +119,7 @@ export default {
       editDiaryTitle: '',
       editDiaryStory: '',
       uid: null,
+      showModal: false,
     }
   },
   async created() {
@@ -102,6 +140,7 @@ export default {
       const dataObj = {
         title: this.newTitle,
         story: this.newStory,
+        createdAt: new Date(),
         uid: this.uid,
       }
       const docRef = await addDoc(colRef, dataObj)
@@ -120,6 +159,21 @@ export default {
               let diaryData = doc.data()
               diaryData.id = doc.id
               this.diarys.push(diaryData)
+              break
+            }
+            case 'modified': {
+              let diaryData = doc.data()
+              diaryData.id = doc.id
+              console.log(diaryData)
+              console.log(this.diarys)
+
+              // search index
+              var index = this.diarys
+                .map(function (e) {
+                  return e.id
+                })
+                .indexOf(diaryData.id)
+              this.diarys[index] = diaryData
               break
             }
             case 'removed': {
@@ -166,129 +220,5 @@ body {
   color: #2c3e50;
   margin: 0;
   padding: 0;
-}
-h1,
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-a {
-  color: #42b983;
-}
-.page-header {
-  padding: 5rem 0;
-  width: 100%;
-  background: #42b983;
-}
-.wrapper {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-.new-todo-form {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 1rem;
-  border-radius: 3px;
-  border: 1px solid #fafafa;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
-  margin-top: -3rem;
-  background: white;
-}
-.new-todo-label {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  justify-content: flex-start;
-  text-align: left;
-  font-weight: bold;
-}
-.new-todo-input {
-  padding: 0.5rem;
-  border-radius: 3px;
-  border: 1px solid lightgrey;
-  font-size: 1rem;
-  margin-top: 0.5rem;
-  font-weight: normal;
-}
-.new-todo-button {
-  font-size: 1rem;
-  padding: 0.5rem 0.7rem;
-  border-radius: 3px;
-  color: white;
-  font-weight: bold;
-  background: #42b983;
-  flex: 1;
-  margin-left: 1rem;
-  border: 1px solid #42b983;
-}
-.edit-todo-form {
-  width: 100%;
-  justify-content: space-between;
-  display: flex;
-  padding: 1rem;
-}
-.edit-todo-label {
-  flex: 1;
-  text-align: left;
-  display: flex;
-  align-items: center;
-}
-.edit-todo-input {
-  padding: 0.5rem;
-  border-radius: 3px;
-  border: 1px solid lightgrey;
-  font-size: 1rem;
-  font-weight: normal;
-  flex: 1;
-  margin-left: 1rem;
-}
-.edit-todo-button {
-  font-size: 1rem;
-  padding: 0.5rem 0.7rem;
-  border-radius: 3px;
-  color: #42b983;
-  font-weight: bold;
-  margin-left: 1rem;
-  border: 1px solid #42b983;
-}
-.todo-item {
-  display: flex;
-  align-items: center;
-  border-top: 1px solid lightgrey;
-  border-left: 1px solid lightgrey;
-  border-right: 1px solid lightgrey;
-  justify-content: space-between;
-  &:first-of-type {
-    border-radius: 3px 3px 0 0;
-  }
-  &:last-of-type {
-    border-bottom: 1px solid lightgrey;
-    border-radius: 0 0 3px 3px;
-  }
-}
-.todo-item-label {
-  cursor: pointer;
-  padding: 1rem;
-}
-.todo-item__checkbox {
-  margin-right: 1rem;
-}
-.todo-list {
-  max-width: 100%;
-  margin: 2rem auto;
-}
-.todo-button {
-  background: transparent;
-  border: 0;
-  padding: 0.5rem;
-  width: 40px;
-  height: 40px;
-  border-radius: 3px;
-  cursor: pointer;
 }
 </style>
