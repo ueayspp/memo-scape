@@ -43,8 +43,8 @@
           </div>
 
           <!-- EDIT FORM -->
-          <form v-else class="w-56 h-fit flex flex-col">
-            <label class="flex flex-col">
+          <form v-else class="w-56 h-fit">
+            <label class="flex flex-col p-4">
               <input
                 v-model.trim="editNoteTitle"
                 type="text"
@@ -53,13 +53,13 @@
               <textarea
                 v-model.trim="editNoteContent"
                 type="text"
-                class="text-sm text-start font-bold mx-2 border-none focus:outline-none"
+                class="h-48 resize-none text-sm text-start font-bold mx-2 border-none focus:outline-none"
               ></textarea>
             </label>
 
             <button
               type="submit"
-              class="w-12 px-auto py-1 text-sm text-white font-semibold bg-emerald-500 hover:bg-emerald-700 rounded-full"
+              class="w-12 px-auto absolute bottom-4 right-4 text-sm text-white font-semibold bg-emerald-500 hover:bg-emerald-700 rounded-full"
               @click.prevent="updateNote"
             >
               Save
@@ -143,7 +143,6 @@ export default {
       this.newTitle = this.newContent = ''
     },
     async subscribeNotesCollection() {
-      // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
       const notesCollection = query(collection(db, 'notes'), where('uid', '==', this.uid))
       await onSnapshot(notesCollection, (snap) => {
         const docChanges = snap.docChanges()
@@ -154,6 +153,21 @@ export default {
               let noteData = doc.data()
               noteData.id = doc.id
               this.notes.push(noteData)
+              break
+            }
+            case 'modified': {
+              let noteData = doc.data()
+              noteData.id = doc.id
+              console.log(noteData)
+              console.log(this.notes)
+
+              // search index
+              var index = this.notes
+                .map(function (e) {
+                  return e.id
+                })
+                .indexOf(noteData.id)
+              this.notes[index] = noteData
               break
             }
             case 'removed': {
@@ -201,5 +215,8 @@ body {
   color: #2c3e50;
   margin: 0;
   padding: 0;
+}
+*:focus {
+  outline: none !important;
 }
 </style>
