@@ -4,11 +4,7 @@
       <!-- logo -->
       <div class="inline-flex items-center justify-center w-20 h-20">
         <div
-<<<<<<< HEAD
           class="flex justify-center items-center w-10 h-10 text-white bg-gradient-to-br from-green-400 to-blue-400 rounded-lg"
-=======
-          class="flex justify-center items-center w-10 h-10 text-white bg-gradient-to-br from-green-500 to-blue-400 rounded-lg"
->>>>>>> e096731519af459581ccab0c44a175b9a60783b5
         >
           <CloudIcon class="h-7 w-7 text-white" />
         </div>
@@ -125,20 +121,6 @@
                   :class="[isActive ? activeClass : '', errorClass]"
                 />
                 <span class="text-sm px-4">Note</span> -->
-              </router-link>
-            </li>
-
-            <li>
-              <router-link
-                to="/planner"
-                class="flex justify-center px-8 py-1.5 text-gray-500 rounded hover:bg-gray-50 hover:text-gray-700 relative group"
-              >
-                <CalendarIcon class="h-5 w-5 text-gray-400 hover:text-emerald-500" />
-<<<<<<< HEAD
-                <span class="text-sm px-4">Planner</span>
-=======
-                <!-- <span class="text-sm px-4">Planner</span> -->
->>>>>>> e096731519af459581ccab0c44a175b9a60783b5
               </router-link>
             </li>
 

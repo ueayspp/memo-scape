@@ -19,7 +19,12 @@
         <button type="submit" class="new-todo-button" @click.prevent="addTodo">Add</button>
       </form>
       <ul class="todo-list">
-        <li v-for="todo in todos" :key="todo.id" class="todo-item">
+        <li
+          v-for="todo in todos"
+          :key="todo.id"
+          class="todo-item"
+          :class="[todo.done ? 'line-through' : '']"
+        >
           <!-- check if currentlyEditing or not -->
           <!-- if !currentlyEditing => display checkbox, todoContent -->
           <label v-if="currentlyEditing !== todo.id" class="todo-item-label">
