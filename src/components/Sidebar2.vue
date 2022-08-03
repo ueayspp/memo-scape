@@ -24,6 +24,10 @@
         <h1 class="text-lg text-start font-bold">Upcoming events</h1>
         <ul class="mt-4 text-start">
           <li>event</li>
+          <li>event</li>
+          <li>event</li>
+          <li>event</li>
+          <li>event</li>
         </ul>
       </div>
     </div>
@@ -47,19 +51,18 @@ export default {
           dates: new Date(),
         },
         {
-          dot: true,
-          dates: [
-            new Date(2022, 7, 1), // Jan 1st
-            new Date(2022, 7, 10), // Jan 10th
-            new Date(2022, 7, 22), // Jan 22nd
-          ],
-        },
-        {
           dot: 'red',
           dates: [
-            new Date(2022, 7, 4), // Jan 4th
-            new Date(2022, 7, 10), // Jan 10th
-            new Date(2022, 7, 15), // Jan 15th
+            new Date(2022, 7, 5),
+            new Date(2022, 7, 8),
+            new Date(2022, 7, 9),
+            new Date(2022, 7, 18),
+            new Date(2022, 7, 26),
+            new Date(2022, 8, 9),
+            new Date(2022, 8, 13),
+            new Date(2022, 8, 17),
+            new Date(2022, 8, 24),
+            new Date(2022, 8, 30),
           ],
         },
       ],

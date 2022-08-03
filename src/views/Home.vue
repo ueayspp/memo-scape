@@ -12,23 +12,15 @@
       <!--  -->
       <section class="">
         <h1 class="text-xl text-start font-bold pt-8 pb-4">Summary</h1>
-        <div class="flex flex-row gap-4">
-          <div class="w-56 h-60 bg-emerald-400 shadow rounded-lg">
-            <h1>Create Diary</h1>
-          </div>
-          <div class="w-56 h-60 bg-emerald-300 shadow rounded-lg">
-            <h1>Create Note</h1>
-          </div>
-          <div class="w-56 h-60 bg-white shadow rounded-lg">
-            <h1>...</h1>
-          </div>
+        <div class="w-full h-72 bg-emerald-500 shadow rounded-lg">
+          <h1 class="">Sai a rai dee</h1>
         </div>
       </section>
 
       <!-- Query Today's Duedate -->
       <section class="">
         <h1 class="text-xl text-start font-bold pt-8 pb-4">Todo</h1>
-        <div class="w-full h-56 space-y-8 overflow-auto">
+        <div class="w-full h-48 space-y-8 overflow-auto">
           <ul class="grid grid-cols-2 gap-2 w-full text-start">
             <li
               v-for="todo in todos"
