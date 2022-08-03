@@ -2,7 +2,7 @@
   <Sidebar />
   <RouterView />
   <div class="w-screen h-screen p-20 bg-gray-100">
-    <h1 class="text-4xl text-center font-bold">Diary</h1>
+    <h1 class="text-5xl text-center font-bold">Diary</h1>
 
     <!-- NEW DIARY MODAL -->
     <div class="flex justify-start">
@@ -25,29 +25,16 @@
       <!-- DISPLAY -->
       <div class="w-1/3 h-128 overflow-auto">
         <ul class="flex-col w-96">
-          <li
-            v-for="diary in diarys"
-            :key="diary.id"
-            class="border-b-2 bg-white hover:bg-emerald-50"
-          >
+          <li v-for="diary in diarys" :key="diary.id" class="border-b-2 bg-white hover:bg-gray-50">
             <label @click.prevent="editDiary(diary)" class="relative hover:cursor-pointer">
-              <h1 class="text-xl text-start font-bold p-6">{{ diary.title }}</h1>
-              <p class="text-sm text-start truncate font-bold px-6 pb-6">{{ diary.story }}</p>
+              <p class="text-sm text-start text-emerald-500 font-bold p-6">{{ diary.createdAt }}</p>
+              <h1 class="text-xl text-start font-bold px-6 pb-6">{{ diary.title }}</h1>
               <div class="absolute top-4 right-4">
                 <button @click.prevent="deleteDiary(diary.id)" class="bg-red-500 h-8 w-8 px-1">
                   <TrashIcon class="h-5 w-5 text-white" />
                 </button>
               </div>
             </label>
-
-            <!-- <div class="absolute bottom-4 right-4" v-if="currentlyEditing !== diary.id">
-              <button @click.prevent="editDiary(diary)">
-                <PencilIcon class="h-5 w-5 text-emerald-500" />
-              </button>
-              <button @click.prevent="deleteDiary(diary.id)">
-                <TrashIcon class="h-5 w-5 text-red-500" />
-              </button>
-            </div> -->
           </li>
         </ul>
       </div>
@@ -59,20 +46,24 @@
             <input
               v-model.trim="editDiaryTitle"
               type="text"
-              class="text-xl text-start font-bold m-2 border-none focus:outline-none"
+              class="text-2xl text-start font-bold m-2 border-none focus:outline-none"
             />
             <textarea
               v-model.trim="editDiaryStory"
               type="text"
-              class="h-48 resize-none text-sm text-start font-bold mx-2 border-none focus:outline-none"
+              class="h-48 resize-none text-md text-start font-bold mx-2 border-none focus:outline-none"
             ></textarea>
-            <button
-              type="submit"
-              class="w-12 px-auto text-sm text-white font-semibold bg-emerald-500 hover:bg-emerald-700 rounded-full"
-              @click.prevent="updateDiary"
-            >
-              Save
-            </button>
+
+            <!-- DISPLAY IF SELECT DIARY -->
+            <div v-if="currentlyEditing" class="pl-4">
+              <button
+                type="submit"
+                class="w-16 px-4 py-2 text-sm text-white font-semibold bg-emerald-500 hover:bg-emerald-700 rounded-full"
+                @click.prevent="updateDiary"
+              >
+                Save
+              </button>
+            </div>
           </label>
         </form>
       </div>
@@ -135,18 +126,6 @@ export default {
     await this.subscribeDiarysCollection()
   },
   methods: {
-    async addDiary() {
-      const colRef = collection(db, 'diarys')
-      const dataObj = {
-        title: this.newTitle,
-        story: this.newStory,
-        createdAt: new Date(),
-        uid: this.uid,
-      }
-      const docRef = await addDoc(colRef, dataObj)
-      console.log('Document written with ID: ', docRef.id)
-      this.newTitle = this.newStory = ''
-    },
     async subscribeDiarysCollection() {
       // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
       const diarysCollection = query(collection(db, 'diarys'), where('uid', '==', this.uid))
