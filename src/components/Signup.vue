@@ -1,12 +1,16 @@
 <template>
   <div class="max-w-screen-xl px-4 py-16 mx-auto my-16">
-    <div class="max-w-lg mx-auto">
-      <h1 class="text-3xl font-bold text-center text-emerald-600">Get started today</h1>
+    <div class="absolute top-10 left-20 flex flex-row">
+      <CloudIcon class="h-7 w-7 text-green-500" />
+      <h1
+        class="ml-2 text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-blue-500"
+      >
+        Memoscape
+      </h1>
+    </div>
 
-      <p class="max-w-md mx-auto mt-4 text-center text-gray-500">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati sunt dolores deleniti
-        inventore quaerat mollitia?
-      </p>
+    <div class="w-128 mx-auto">
+      <h1 class="text-5xl font-bold text-center">Sign up</h1>
 
       <form @submit.prevent="signUp" class="p-8 mt-6 mb-0 space-y-4 rounded-lg shadow-2xl">
         <p class="text-lg text-center font-medium">Create your account</p>
@@ -110,10 +114,14 @@
 </template>
 
 <script>
+import { CloudIcon } from '@heroicons/vue/outline'
 import { db } from '@/main'
 import { collection } from 'firebase/firestore'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 export default {
+  components: {
+    CloudIcon,
+  },
   data() {
     return {
       username: '',
