@@ -22,12 +22,19 @@
 
       <div class="mt-12">
         <h1 class="text-lg text-start font-bold">Upcoming events</h1>
-        <ul class="mt-4 text-start">
-          <li>event</li>
-          <li>event</li>
-          <li>event</li>
-          <li>event</li>
-          <li>event</li>
+        <ul class="mt-4 text-start space-y-2">
+          <li class="flex flex-row px-4 py-4 rounded-lg border">
+            <dd class="font-medium text-red-500 mr-8">August 5th</dd>
+            <dd class="font-medium">Intern Pitching</dd>
+          </li>
+          <li class="flex flex-row px-4 py-4 rounded-lg border">
+            <dd class="font-medium text-red-500 mr-8">August 8th</dd>
+            <dd class="font-medium">Open Semester</dd>
+          </li>
+          <li class="flex flex-row px-4 py-4 rounded-lg border">
+            <dd class="font-medium text-red-500 mr-8">August 12th</dd>
+            <dd class="font-medium">Mother's Day</dd>
+          </li>
         </ul>
       </div>
     </div>
@@ -55,12 +62,9 @@ export default {
           dates: [
             new Date(2022, 7, 5),
             new Date(2022, 7, 8),
-            new Date(2022, 7, 9),
-            new Date(2022, 7, 18),
-            new Date(2022, 7, 26),
+            new Date(2022, 7, 12),
             new Date(2022, 8, 9),
             new Date(2022, 8, 13),
-            new Date(2022, 8, 17),
             new Date(2022, 8, 24),
             new Date(2022, 8, 30),
           ],
