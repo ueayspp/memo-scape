@@ -2,21 +2,25 @@
   <div id="sidebar" class="flex flex-col justify-between w-144 h-screen border-l bg-white">
     <div class="pt-10 mx-auto">
       <div class="flex">
-        <div class="block w-16 h-16">
-          <img
-            :src="photoURL"
-            alt="profile"
-            class="w-16 h-16 mb-8 rounded-full"
-            @click.prevent="editImgURL()"
-          />
-        </div>
+        <div
+          v-if="photoURL === null"
+          class="w-16 h-16 mb-8 bg-gray-300 rounded-full cursor-pointer"
+          @click.prevent="editImgURL()"
+        ></div>
+        <img
+          v-else
+          :src="photoURL"
+          alt="profile"
+          class="w-16 h-16 mb-8 rounded-full cursor-pointer"
+          @click.prevent="editImgURL()"
+        />
         <div class="flex flex-col ml-4">
           <h1 class="text-lg text-start font-bold">{{ displayName }}</h1>
           <h2 class="text-sm text-start text-gray-500 font-semibold">{{ email }}</h2>
         </div>
       </div>
 
-      <div class="w-72 h-72 py-10">
+      <div class="w-72 h-72 py-5">
         <v-calendar is-expanded title-position="left" :attributes="attrs" />
       </div>
 
@@ -50,7 +54,7 @@ export default {
       uid: null,
       displayName: '',
       email: '',
-      photoURL: '',
+      photoURL: null,
       attrs: [
         {
           key: 'today',
