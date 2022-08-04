@@ -2,16 +2,12 @@
   <div id="sidebar" class="flex flex-col justify-between w-144 h-screen border-l bg-white">
     <div class="pt-10 mx-auto">
       <div class="flex">
-        <div
-          v-if="photoURL === null"
-          class="w-16 h-16 mb-8 bg-gray-300 rounded-full cursor-pointer"
-          @click.prevent="editImgURL()"
-        ></div>
+        <div v-if="photoURL === null" class="w-16 h-16 mb-8 bg-gray-300 rounded-full"></div>
         <img
           v-else
           :src="photoURL"
           alt="profile"
-          class="w-16 h-16 mb-8 rounded-full cursor-pointer"
+          class="w-16 h-16 mb-8 rounded-full"
           @click.prevent="editImgURL()"
         />
         <div class="flex flex-col ml-4">
