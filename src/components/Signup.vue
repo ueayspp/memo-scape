@@ -106,7 +106,7 @@
 
         <p class="text-sm text-center text-gray-500">
           Already have an account?
-          <a class="underline" href="/login">Log in</a>
+          <router-link class="underline" to="/login">Log in</router-link>
         </p>
       </form>
     </div>

@@ -87,6 +87,7 @@ import {
   updateDoc,
   query,
   where,
+  orderBy,
 } from 'firebase/firestore'
 
 export default {
@@ -128,7 +129,11 @@ export default {
   methods: {
     async subscribeDiarysCollection() {
       // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
-      const diarysCollection = query(collection(db, 'diarys'), where('uid', '==', this.uid))
+      const diarysCollection = query(
+        collection(db, 'diarys'),
+        where('uid', '==', this.uid),
+        orderBy('createdAt', 'desc'),
+      )
       await onSnapshot(diarysCollection, (snap) => {
         const docChanges = snap.docChanges()
         docChanges.forEach((docChange) => {

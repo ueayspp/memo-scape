@@ -92,7 +92,7 @@
 
         <p class="text-sm text-center text-gray-500">
           No account?
-          <a class="underline" href="/signup">Sign up</a>
+          <router-link class="underline" to="/signup">Sign up</router-link>
         </p>
       </form>
     </div>

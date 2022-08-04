@@ -25,7 +25,7 @@
         <li
           v-for="note in notes"
           :key="note.id"
-          class="w-56 h-fit relative bg-white rounded-lg drop-shadow-xl"
+          class="w-60 h-72 relative bg-white rounded-lg drop-shadow-xl"
         >
           <!-- check if currentlyEditing or not -->
           <!-- DISPLAY FORM -->
@@ -34,16 +34,16 @@
             <p class="text-sm text-start font-bold px-6 pb-6">{{ note.content }}</p>
           </label>
           <div class="absolute bottom-4 right-4" v-if="currentlyEditing !== note.id">
-            <button class="" id="show-modal" @click.prevent="editNote(note)">
+            <button class="mx-1" id="show-modal" @click.prevent="editNote(note)">
               <PencilIcon class="h-5 w-5 text-emerald-500" />
             </button>
-            <button class="" @click.prevent="deleteNote(note.id)">
+            <button class="mx-1" @click.prevent="deleteNote(note.id)">
               <TrashIcon class="h-5 w-5 text-red-500" />
             </button>
           </div>
 
           <!-- EDIT FORM -->
-          <form v-else class="w-56 h-fit">
+          <form v-else class="w-56 h-72">
             <label class="flex flex-col p-4">
               <input
                 v-model.trim="editNoteTitle"
