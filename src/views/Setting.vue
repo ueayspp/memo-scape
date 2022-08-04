@@ -9,7 +9,13 @@
     <section class="w-2/3 text-start bg-white my-20 mr-20 shadow rounded-lg">
       <div class="flex flex-col text-start content-center px-20 py-20">
         <div class="flex justify-center">
+          <div
+            v-if="photoURL === null"
+            class="w-40 h-40 mb-8 bg-gray-300 rounded-full cursor-pointer"
+            @click.prevent="editImgURL()"
+          ></div>
           <img
+            v-else
             :src="photoURL"
             alt="profile"
             class="w-40 h-40 mb-8 rounded-full cursor-pointer"
@@ -91,7 +97,7 @@ export default {
       uid: null,
       displayName: '',
       email: '',
-      photoURL: '',
+      photoURL: null,
     }
   },
   created() {
