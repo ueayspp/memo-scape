@@ -115,12 +115,14 @@ export default {
   methods: {
     editImgURL() {
       const auth = getAuth()
+      const imgURL = prompt('Enter your imgURL:')
       updateProfile(auth.currentUser, {
-        photoURL: prompt('Enter your imgURL:'),
+        photoURL: imgURL,
       })
         .then(() => {
           // Profile updated!
           alert('Update Image!')
+          this.photoURL = imgURL
         })
         .catch((error) => {
           // An error occurred
@@ -131,12 +133,15 @@ export default {
     },
     editDisplayName() {
       const auth = getAuth()
+      const name = prompt('Enter your username:')
       updateProfile(auth.currentUser, {
-        displayName: prompt('Enter your username:'),
+        displayName: name,
       })
         .then(() => {
           // Profile updated!
           alert('Update Display Name!')
+          console.log(name)
+          this.displayName = name
         })
         .catch((error) => {
           // An error occurred
@@ -153,6 +158,7 @@ export default {
         .then(() => {
           // Email updated!
           alert('Update Email!')
+          this.email = newEmail
         })
         .catch((error) => {
           // An error occurred
