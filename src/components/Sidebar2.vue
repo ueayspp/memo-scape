@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { getAuth } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 export default {
   data() {
@@ -71,15 +71,11 @@ export default {
   },
   async created() {
     const auth = getAuth()
-    const user = auth.currentUser
-    if (user !== null) {
+    onAuthStateChanged(auth, (user) => {
       this.displayName = user.displayName
       this.email = user.email
       this.photoURL = user.photoURL
-      console.log('DisplayName: ' + this.displayName)
-      console.log('Email: ' + this.email)
-      console.log('Photo: ' + this.photoURL)
-    }
+    })
   },
 }
 </script>

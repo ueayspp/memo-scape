@@ -90,38 +90,26 @@ export default {
       dueDate: '',
     }
   },
-  async created() {
-    const auth = getAuth()
-    const user = auth.currentUser
-
-    if (user) {
-      const uuid = user.uid
-      this.uid = uuid
-      console.log('get uid: ' + this.uid)
-    }
-
-    await this.getDisplayName()
-    await this.subscribeTodosCollection()
+  created() {
+    this.getDisplayName()
+    this.subscribeTodosCollection()
   },
   methods: {
-    async getDisplayName() {
+    getDisplayName() {
       const auth = getAuth()
-      const user = auth.currentUser
-      if (user !== null) {
+      onAuthStateChanged(auth, (user) => {
+        this.uid = user.uid
         this.displayName = user.displayName
-        console.log('Display Name: ' + this.displayName)
-
-        return `${this.displayName}`
-      }
+      })
     },
-    async subscribeTodosCollection() {
+    subscribeTodosCollection() {
       // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
       const todosCollection = query(
         collection(db, 'todos'),
         where('uid', '==', this.uid),
         where('done', '==', false),
       )
-      await onSnapshot(todosCollection, (snap) => {
+      onSnapshot(todosCollection, (snap) => {
         const docChanges = snap.docChanges()
         docChanges.forEach((docChange) => {
           const doc = docChange.doc
