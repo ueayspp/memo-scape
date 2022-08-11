@@ -9,13 +9,6 @@
           New Todo:
           <input v-model="newTodo" type="text" class="new-todo-input" />
         </label>
-        <!-- <div class="flex">
-          <litepie-datepicker
-            as-single
-            placeholder="due date"
-            v-model="dueDate"
-          ></litepie-datepicker>
-        </div> -->
         <button type="submit" class="new-todo-button" @click.prevent="addTodo">Add</button>
       </form>
       <ul class="todo-list">
@@ -26,7 +19,6 @@
           :class="[todo.done ? 'line-through' : '']"
         >
           <!-- check if currentlyEditing or not -->
-          <!-- if !currentlyEditing => display checkbox, todoContent -->
           <label v-if="currentlyEditing !== todo.id" class="todo-item-label">
             <input
               v-model="todo.done"
@@ -54,13 +46,6 @@
               Edit:
               <input v-model.trim="editTodoText" type="text" class="edit-todo-input" />
             </label>
-            <!-- <div class="flex">
-              <litepie-datepicker
-                as-single
-                placeholder="due date"
-                v-model="editDueDate"
-              ></litepie-datepicker>
-            </div> -->
             <button type="submit" class="edit-todo-button" @click.prevent="updateTodo">Save</button>
           </form>
         </li>
@@ -108,35 +93,33 @@ export default {
       editDueDate: '',
     }
   },
-  async created() {
-    const auth = getAuth()
-    const user = auth.currentUser
-
-    if (user) {
-      const uuid = user.uid
-      this.uid = uuid
-      console.log('get uid: ' + this.uid)
-    }
-
-    await this.subscribeTodosCollection()
+  created() {
+    this.getUser()
   },
   methods: {
-    async addTodo() {
+    getUser() {
+      const auth = getAuth()
+      onAuthStateChanged(auth, (user) => {
+        this.uid = user.uid
+        console.log('getUID: ', this.uid)
+        this.displayName = user.displayName
+        this.subscribeTodosCollection()
+      })
+    },
+    addTodo() {
       const colRef = collection(db, 'todos')
       const dataObj = {
         content: this.newTodo,
-        // dueDate: this.dueDate,
         done: false,
         uid: this.uid,
       }
-      const docRef = await addDoc(colRef, dataObj)
+      const docRef = addDoc(colRef, dataObj)
       console.log('Document written with ID: ', docRef.id)
       this.newTodo = this.dueDate = ''
     },
-    async subscribeTodosCollection() {
-      // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
+    subscribeTodosCollection() {
       const todosCollection = query(collection(db, 'todos'), where('uid', '==', this.uid))
-      await onSnapshot(todosCollection, (snap) => {
+      onSnapshot(todosCollection, (snap) => {
         const docChanges = snap.docChanges()
         docChanges.forEach((docChange) => {
           const doc = docChange.doc
@@ -170,32 +153,29 @@ export default {
         })
       })
     },
-    async editTodo(todo) {
+    editTodo(todo) {
       this.currentlyEditing = todo.id
       this.editTodoText = todo.content
-      // this.editDueDate = todo.dueDate
       console.log('Current doc ID: ', this.currentlyEditing)
       return this.currentlyEditing
     },
-    async updateTodo() {
-      await updateDoc(doc(db, 'todos', this.currentlyEditing), {
+    updateTodo() {
+      updateDoc(doc(db, 'todos', this.currentlyEditing), {
         content: this.editTodoText,
-        // dueDate: this.editDueDate,
       })
       this.currentlyEditing = null
     },
-    async checkTodo(todo) {
+    checkTodo(todo) {
       console.log('done: ', todo.id)
-
-      await updateDoc(doc(db, 'todos', todo.id), {
+      updateDoc(doc(db, 'todos', todo.id), {
         done: true,
       })
     },
-    async deleteTodo(todoID) {
+    deleteTodo(todoID) {
       // retrieve all the documents and delete them
       const colRef = collection(db, 'todos')
       const todoRef = doc(colRef, todoID)
-      await deleteDoc(todoRef)
+      deleteDoc(todoRef)
     },
   },
 }

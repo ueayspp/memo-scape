@@ -118,33 +118,33 @@ export default {
       showModal: false,
     }
   },
-  async created() {
-    const auth = getAuth()
-    const user = auth.currentUser
-
-    if (user) {
-      const uuid = user.uid
-      this.uid = uuid
-      console.log('get uid: ' + this.uid)
-    }
-
-    await this.subscribeNotesCollection()
+  created() {
+    this.getUser()
   },
   methods: {
-    async addNote() {
+    getUser() {
+      const auth = getAuth()
+      onAuthStateChanged(auth, (user) => {
+        this.uid = user.uid
+        console.log('getUID: ', this.uid)
+        this.displayName = user.displayName
+        this.subscribeNotesCollection()
+      })
+    },
+    addNote() {
       const colRef = collection(db, 'notes')
       const dataObj = {
         title: this.newTitle,
         content: this.newContent,
         uid: this.uid,
       }
-      const docRef = await addDoc(colRef, dataObj)
+      const docRef = addDoc(colRef, dataObj)
       console.log('Document written with ID: ', docRef.id)
       this.newTitle = this.newContent = ''
     },
-    async subscribeNotesCollection() {
+    subscribeNotesCollection() {
       const notesCollection = query(collection(db, 'notes'), where('uid', '==', this.uid))
-      await onSnapshot(notesCollection, (snap) => {
+      onSnapshot(notesCollection, (snap) => {
         const docChanges = snap.docChanges()
         docChanges.forEach((docChange) => {
           const doc = docChange.doc
@@ -178,25 +178,25 @@ export default {
         })
       })
     },
-    async editNote(note) {
+    editNote(note) {
       this.currentlyEditing = note.id
       this.editNoteTitle = note.title
       this.editNoteContent = note.content
       console.log('Current doc ID: ', this.currentlyEditing)
       return this.currentlyEditing
     },
-    async updateNote() {
-      await updateDoc(doc(db, 'notes', this.currentlyEditing), {
+    updateNote() {
+      updateDoc(doc(db, 'notes', this.currentlyEditing), {
         title: this.editNoteTitle,
         content: this.editNoteContent,
       })
       this.currentlyEditing = null
     },
-    async deleteNote(noteID) {
+    deleteNote(noteID) {
       // retrieve all the documents and delete them
       const colRef = collection(db, 'notes')
       const noteRef = doc(colRef, noteID)
-      await deleteDoc(noteRef)
+      deleteDoc(noteRef)
     },
   },
 }

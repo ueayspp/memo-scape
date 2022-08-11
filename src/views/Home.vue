@@ -87,23 +87,22 @@ export default {
       todos: [],
       currentlyEditing: null,
       uid: null,
-      dueDate: '',
     }
   },
   created() {
-    this.getDisplayName()
-    this.subscribeTodosCollection()
+    this.getUser()
   },
   methods: {
-    getDisplayName() {
+    getUser() {
       const auth = getAuth()
       onAuthStateChanged(auth, (user) => {
         this.uid = user.uid
+        console.log('getUID: ', this.uid)
         this.displayName = user.displayName
+        this.subscribeTodosCollection()
       })
     },
     subscribeTodosCollection() {
-      // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
       const todosCollection = query(
         collection(db, 'todos'),
         where('uid', '==', this.uid),
@@ -128,10 +127,9 @@ export default {
         })
       })
     },
-    async checkTodo(todo) {
+    checkTodo(todo) {
       console.log('done: ', todo.id)
-
-      await updateDoc(doc(db, 'todos', todo.id), {
+      updateDoc(doc(db, 'todos', todo.id), {
         done: true,
       })
     },
