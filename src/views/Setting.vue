@@ -101,18 +101,18 @@ export default {
     }
   },
   created() {
-    const auth = getAuth()
-    const user = auth.currentUser
-    if (user !== null) {
-      this.displayName = user.displayName
-      this.email = user.email
-      this.photoURL = user.photoURL
-      console.log('DisplayName: ' + this.displayName)
-      console.log('Email: ' + this.email)
-      console.log('Photo: ' + this.photoURL)
-    }
+    this.getUser()
   },
   methods: {
+    getUser() {
+      const auth = getAuth()
+      onAuthStateChanged(auth, (user) => {
+        this.uid = user.uid
+        this.displayName = user.displayName
+        this.email = user.email
+        this.photoURL = user.photoURL
+      })
+    },
     editImgURL() {
       const auth = getAuth()
       const imgURL = prompt('Enter your imgURL:')

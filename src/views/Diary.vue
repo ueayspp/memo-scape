@@ -101,7 +101,7 @@ export default {
     Sidebar,
     CreateDiaryModal,
   },
-  name: 'note',
+  name: 'diary',
   data() {
     return {
       newTitle: '',
@@ -114,27 +114,26 @@ export default {
       showModal: false,
     }
   },
-  async created() {
-    const auth = getAuth()
-    const user = auth.currentUser
-
-    if (user) {
-      const uuid = user.uid
-      this.uid = uuid
-      console.log('get uid: ' + this.uid)
-    }
-
-    await this.subscribeDiarysCollection()
+  created() {
+    this.getUser()
   },
   methods: {
-    async subscribeDiarysCollection() {
-      // diarysCollection => เปลี่ยนเป็น query แบบบรรทัดที่ 112 เพื่อให้เห็นเฉพาะของ user นั้นๆ
+    getUser() {
+      const auth = getAuth()
+      onAuthStateChanged(auth, (user) => {
+        this.uid = user.uid
+        console.log('getUID: ', this.uid)
+        this.displayName = user.displayName
+        this.subscribeDiarysCollection()
+      })
+    },
+    subscribeDiarysCollection() {
       const diarysCollection = query(
         collection(db, 'diarys'),
         where('uid', '==', this.uid),
         orderBy('createdAt', 'desc'),
       )
-      await onSnapshot(diarysCollection, (snap) => {
+      onSnapshot(diarysCollection, (snap) => {
         const docChanges = snap.docChanges()
         docChanges.forEach((docChange) => {
           const doc = docChange.doc
@@ -168,24 +167,24 @@ export default {
         })
       })
     },
-    async editDiary(diary) {
+    editDiary(diary) {
       this.currentlyEditing = diary.id
       this.editDiaryTitle = diary.title
       this.editDiaryStory = diary.story
       console.log('Current doc ID: ', this.currentlyEditing)
       return this.currentlyEditing
     },
-    async updateDiary() {
-      await updateDoc(doc(db, 'diarys', this.currentlyEditing), {
+    updateDiary() {
+      updateDoc(doc(db, 'diarys', this.currentlyEditing), {
         title: this.editDiaryTitle,
         story: this.editDiaryStory,
       })
     },
-    async deleteDiary(diaryID) {
+    deleteDiary(diaryID) {
       // retrieve all the documents and delete them
       const colRef = collection(db, 'diarys')
       const diaryRef = doc(colRef, diaryID)
-      await deleteDoc(diaryRef)
+      deleteDoc(diaryRef)
     },
   },
 }
