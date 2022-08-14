@@ -24,6 +24,12 @@
     <div class="flex">
       <!-- DISPLAY -->
       <div class="w-1/3 h-128 overflow-auto">
+        <!-- Loading -->
+        <div v-if="!diarys.length" class="flex-col w-96 animate-pulse">
+          <div class="p-16 mb-1 bg-gray-200"></div>
+          <div class="p-16 mb-1 bg-gray-200"></div>
+          <div class="p-16 mb-1 bg-gray-200"></div>
+        </div>
         <ul class="flex-col w-96">
           <li v-for="diary in diarys" :key="diary.id" class="border-b-2 bg-white hover:bg-gray-50">
             <label @click.prevent="editDiary(diary)" class="relative hover:cursor-pointer">

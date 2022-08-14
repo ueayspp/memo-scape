@@ -24,6 +24,10 @@
         </div>
 
         <div class="flex justify-center">
+          <!-- Loading -->
+          <div v-if="!displayName">
+            <div class="p-3 mb-1 w-20 bg-gray-100 animate-pulse"></div>
+          </div>
           <label class="font-semibold">
             {{ displayName }}
             <button class="" @click.prevent="editDisplayName()">
@@ -32,6 +36,10 @@
         </div>
 
         <div class="flex justify-center">
+          <!-- Loading -->
+          <div v-if="!email">
+            <div class="p-3 w-48 bg-gray-100 animate-pulse"></div>
+          </div>
           <label class="font-medium">{{ email }}</label>
         </div>
 

@@ -21,6 +21,13 @@
     </div>
 
     <div class="h-128 overflow-auto">
+      <!-- Loading -->
+      <div v-if="!notes.length" class="grid grid-cols-4 gap-4 animate-pulse">
+        <div class="w-60 h-72 rounded-lg bg-gray-200"></div>
+        <div class="w-60 h-72 rounded-lg bg-gray-200"></div>
+        <div class="w-60 h-72 rounded-lg bg-gray-200"></div>
+        <div class="w-60 h-72 rounded-lg bg-gray-200"></div>
+      </div>
       <ul class="grid grid-cols-4 gap-4">
         <li
           v-for="note in notes"
