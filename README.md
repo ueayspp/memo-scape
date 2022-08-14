@@ -1,5 +1,7 @@
 # memo-scape
 
+https://memoscape.netlify.app/
+
 ## Project setup
 ```
 yarn install
