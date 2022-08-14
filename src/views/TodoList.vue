@@ -12,6 +12,14 @@
         <button type="submit" class="new-todo-button" @click.prevent="addTodo">Add</button>
       </form>
       <ul class="todo-list">
+        <!-- Loading -->
+        <div v-if="!todos.length" class="animate-pulse">
+          <div class="p-8 mb-1 rounded-md bg-gray-200"></div>
+          <div class="p-8 mb-1 rounded-md bg-gray-200"></div>
+          <div class="p-8 mb-1 rounded-md bg-gray-200"></div>
+          <div class="p-8 mb-1 rounded-md bg-gray-200"></div>
+          <div class="p-8 mb-1 rounded-md bg-gray-200"></div>
+        </div>
         <li
           v-for="todo in todos"
           :key="todo.id"
@@ -27,7 +35,6 @@
               class="todo-item__checkbox"
             />
             {{ todo.content }}
-            {{ todo.dueDate }}
           </label>
 
           <!-- if !currentlyEditing => display editBtn, delBtn -->

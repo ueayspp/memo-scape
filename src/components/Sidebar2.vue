@@ -10,7 +10,13 @@
           class="w-16 h-16 mb-8 rounded-full"
           @click.prevent="editImgURL()"
         />
+
         <div class="flex flex-col ml-4">
+          <!-- Loading -->
+          <div v-if="displayName === ''">
+            <div class="p-4 mb-2 w-48 bg-gray-100 animate-pulse"></div>
+            <div class="p-2 mb-2 w-48 bg-gray-100 animate-pulse"></div>
+          </div>
           <h1 class="text-lg text-start font-bold">{{ displayName }}</h1>
           <h2 class="text-sm text-start text-gray-500 font-semibold">{{ email }}</h2>
         </div>

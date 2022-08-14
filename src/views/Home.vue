@@ -9,7 +9,7 @@
     </div>
 
     <div class="flex flex-col">
-      <!--  -->
+      <!-- Hero -->
       <section class="">
         <h1 class="text-xl text-start font-bold pt-8 pb-4"></h1>
         <div class="flex w-full h-72 bg-emerald-200 shadow rounded-lg">
@@ -31,10 +31,17 @@
         </div>
       </section>
 
-      <!-- Query Today's Duedate -->
+      <!-- Query Todo -->
       <section class="">
         <h1 class="text-xl text-start font-bold pt-8 pb-4">Todo</h1>
         <div class="w-full h-48 space-y-8 overflow-auto">
+          <!-- Loading -->
+          <div v-if="!todos.length" class="grid grid-cols-2 gap-2 w-full text-start animate-pulse">
+            <div class="p-8 rounded-md bg-gray-100"></div>
+            <div class="p-8 rounded-md bg-gray-100"></div>
+            <div class="p-8 rounded-md bg-gray-100"></div>
+            <div class="p-8 rounded-md bg-gray-100"></div>
+          </div>
           <ul class="grid grid-cols-2 gap-2 w-full text-start">
             <li
               v-for="todo in todos"
